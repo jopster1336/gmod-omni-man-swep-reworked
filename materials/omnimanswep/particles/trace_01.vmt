@@ -1,0 +1,10 @@
+"UnlitGeneric"
+{
+	"$basetexture" "omnimanswep/particles/trace_01"
+	$translucent 1
+	$vertexalpha 1
+	$vertexcolor 1
+	$additive 1
+	$DEPTHBLEND 1
+	$NoCull 1
+}

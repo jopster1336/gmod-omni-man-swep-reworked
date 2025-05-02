@@ -1,0 +1,5 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "models\omniman\hair_side"
+	$translucent 1
+}

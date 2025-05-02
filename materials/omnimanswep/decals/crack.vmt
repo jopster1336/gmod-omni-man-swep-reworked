@@ -1,0 +1,7 @@
+"LightmappedGeneric"
+{
+	$basetexture "omnimanswep/decals/crack"
+	"$translucent" "1"
+	"$vertexcolor" "1"
+	"$vertexalpha" "1"
+}
