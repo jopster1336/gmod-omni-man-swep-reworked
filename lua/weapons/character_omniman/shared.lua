@@ -1019,9 +1019,7 @@ function SWEP:HandleOmniClap()
         end
 
         if i % 8 == 0 then
-            if !IsInWorld(pos) then
-                ParticleEffect( "omniman_omniclap_dust", pos, Angle( 0, 0, 0 ) )    
-            end
+            ParticleEffect( "omniman_omniclap_dust", pos, Angle( 0, 0, 0 ) )    
         end 
     end
 
@@ -1038,7 +1036,7 @@ function SWEP:HandleOmniClap()
             ParticleEffect( "omniman_omniclap_clap", pos, angle )   
 
             angle:RotateAroundAxis( angle:Forward(), 90 )
-            -- ParticleEffect( "omniman_omniclap_clap_05", pos, angle )   
+            ParticleEffect( "omniman_omniclap_clap_05", pos, angle )   
         end    
     end)
     omniClapEffect:Start()
