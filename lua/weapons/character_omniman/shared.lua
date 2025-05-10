@@ -106,28 +106,28 @@ end
 
 function SWEP:Deploy()
     local owner = self:GetOwner()
-    local model = owner:GetModel()
+    -- local model = owner:GetModel()
 
----@diagnostic disable-next-line: undefined-field
-    self:SetPrevModel(model)
-    self.m_OldSkin = owner:GetSkin()
-    self.m_OldBodygroups = owner:GetBodyGroups()
+-- ---@diagnostic disable-next-line: undefined-field
+--     self:SetPrevModel(model)
+--     self.m_OldSkin = owner:GetSkin()
+--     self.m_OldBodygroups = owner:GetBodyGroups()
 
-    owner:SetSkin(0)
-    owner:SetModel(self.CharacterModel)
-    owner:SetBodygroup( 2, 1 )
-    owner:SetBodygroup( 4, 0 )
+    -- owner:SetSkin(0)
+    -- owner:SetModel(self.CharacterModel)
+    -- owner:SetBodygroup( 2, 1 )
+    -- owner:SetBodygroup( 4, 0 )
 
-    local checkModel = Action.Create(self, 1)
-    checkModel:SetEnd(function ()
-        if IsValid(owner) and owner:GetModel() != self.CharacterModel then
-            if SERVER then
-                owner:gebLib_ChatAddText(Color(200, 0, 0), "[OMNI-MAN SWEP] ", color_white, "character.omni_man.warning.modelfailed")
-                owner:EmitSound("common/bugreporter_failed.wav")
-            end
-        end
-    end)
-    checkModel:Start()
+    -- local checkModel = Action.Create(self, 1)
+    -- checkModel:SetEnd(function ()
+    --     if IsValid(owner) and owner:GetModel() != self.CharacterModel then
+    --         if SERVER then
+    --             owner:gebLib_ChatAddText(Color(200, 0, 0), "[OMNI-MAN SWEP] ", color_white, "character.omni_man.warning.modelfailed")
+    --             owner:EmitSound("common/bugreporter_failed.wav")
+    --         end
+    --     end
+    -- end)
+    -- checkModel:Start()
 
     self:PlayVoiceline("vo/deploy_0"..math.random(1,3)..".wav")
     if SERVER then
@@ -139,21 +139,21 @@ end
 
 function SWEP:Holster()
     local owner = self:GetOwner()
-    local model = self:GetPrevModel()
-    local skin = self.m_OldSkin
-    local bodygroups = self.m_OldBodygroups
+    -- local model = self:GetPrevModel()
+    -- local skin = self.m_OldSkin
+    -- local bodygroups = self.m_OldBodygroups
 
-    if model then
-        owner:SetModel(model)
-    end
-    if skin then
-        owner:SetSkin(skin)
-    end
-    if bodygroups then
-        for k, bodygroup in ipairs(bodygroups) do
-            owner:SetBodygroup(k - 1, bodygroup.num - 1)
-        end
-    end
+    -- if model then
+    --     owner:SetModel(model)
+    -- end
+    -- if skin then
+    --     owner:SetSkin(skin)
+    -- end
+    -- if bodygroups then
+    --     for k, bodygroup in ipairs(bodygroups) do
+    --         owner:SetBodygroup(k - 1, bodygroup.num - 1)
+    --     end
+    -- end
 
     self:SetSuperFlying(false)
 
@@ -1317,10 +1317,17 @@ end
 function SWEP:CreateFlightModel()
     if !IsValid(self.m_FlightModel) then
         local owner = self:GetOwner()
-        local mdl = ClientsideModel(self.CharacterModel)
+        local mdl = ClientsideModel(owner:GetModel())
         mdl:SetPos(owner:WorldSpaceCenter() + self:GetForward() * -0)
         mdl:SetAngles(owner:GetAngles())
-        mdl:SetBodygroup( 2, 1 )
+        
+        mdl:SetSkin(owner:GetSkin())
+
+        local count = owner:GetNumBodyGroups()
+        for i = 0, count - 1 do
+            local val = owner:GetBodygroup(i)
+            mdl:SetBodygroup(i, val)
+        end
 
         mdl:ResetSequence("superflight")
 
@@ -1850,6 +1857,7 @@ local function ThirdPerson( ply, pos, angles, fov, wep )
         start = pos,
         endpos = pos - ( angles:Forward() * camFov ),
         collisiongroup = COLLISION_GROUP_DEBRIS,
+        filter = { owner, self }
     } )
     
     if IsValid(lockTarget) then
@@ -1863,6 +1871,7 @@ local function ThirdPerson( ply, pos, angles, fov, wep )
             start = pos,
             endpos = pos - finalPos,
             collisiongroup = COLLISION_GROUP_DEBRIS,
+            filter = { owner, self }
         } )
     end
 
