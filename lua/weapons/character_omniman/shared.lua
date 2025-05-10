@@ -26,7 +26,7 @@ SWEP.AdminOnly = true
 SWEP.CharacterModel = "models/player/omniman_swep/omniman/omniman.mdl"
 SWEP.WorldModel = ""
 SWEP.ViewModel = "models/weapons/c_arms.mdl"
-SWEP.HoldType = "omniman"
+SWEP.HoldType = "normal"
 --
 SWEP.Primary.ClipSize = -1
 SWEP.Primary.DefaultClip = -1
@@ -84,7 +84,7 @@ end
 
 function SWEP:Initialize()
     timer.Simple( 0, function()
-        self:SetHoldType("omniman")        
+        self:SetHoldType("normal")        
     end)
 
     self.m_SmoothAnimData = {}
@@ -2079,69 +2079,6 @@ function SWEP:AdjustMouseSensitivity()
     if self:IsSuperFlying() then
         return GetConVar("omniman_cfg_superflight_sensitivity"):GetFloat() or 0.3
     end
-end
-
----
-local ActIndex = {
-	[ "pistol" ]		= ACT_HL2MP_IDLE_PISTOL,
-	[ "smg" ]			= ACT_HL2MP_IDLE_SMG1,
-	[ "grenade" ]		= ACT_HL2MP_IDLE_GRENADE,
-	[ "ar2" ]			= ACT_HL2MP_IDLE_AR2,
-	[ "shotgun" ]		= ACT_HL2MP_IDLE_SHOTGUN,
-	[ "rpg" ]			= ACT_HL2MP_IDLE_RPG,
-	[ "physgun" ]		= ACT_HL2MP_IDLE_PHYSGUN,
-	[ "crossbow" ]		= ACT_HL2MP_IDLE_CROSSBOW,
-	[ "melee" ]			= ACT_HL2MP_IDLE_MELEE,
-	[ "slam" ]			= ACT_HL2MP_IDLE_SLAM,
-	[ "normal" ]		= ACT_HL2MP_IDLE,
-	[ "fist" ]			= ACT_HL2MP_IDLE_FIST,
-	[ "melee2" ]		= ACT_HL2MP_IDLE_MELEE2,
-	[ "passive" ]		= ACT_HL2MP_IDLE_PASSIVE,
-	[ "knife" ]			= ACT_HL2MP_IDLE_KNIFE,
-	[ "duel" ]			= ACT_HL2MP_IDLE_DUEL,
-	[ "camera" ]		= ACT_HL2MP_IDLE_CAMERA,
-	[ "magic" ]			= ACT_HL2MP_IDLE_MAGIC,
-	[ "revolver" ]		= ACT_HL2MP_IDLE_REVOLVER
-}
---
-function SWEP:SetWeaponHoldType( t )
-    local owner = self:GetOwner()
-	t = string.lower( t )
-	local index = ActIndex[ t ]
-
-	if ( index == nil ) then
-		t = "normal"
-		index = ActIndex[ t ]
-	end
-
-    if !IsValid(owner) then return end
-    
-	self.ActivityTranslate = {}
-	self.ActivityTranslate[ ACT_MP_STAND_IDLE ]					= index
-	self.ActivityTranslate[ ACT_MP_WALK ]						= index + 1
-	self.ActivityTranslate[ ACT_MP_RUN ]						= index + 2
-	self.ActivityTranslate[ ACT_MP_CROUCH_IDLE ]				= index + 3
-	self.ActivityTranslate[ ACT_MP_CROUCHWALK ]					= index + 4
-    self.ActivityTranslate[ ACT_MP_ATTACK_STAND_PRIMARYFIRE ]	= owner:GetSequenceActivity( owner:LookupSequence( "flightdeploy" ) )
-    self.ActivityTranslate[ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE ]	= owner:GetSequenceActivity( owner:LookupSequence( "flightdeploy" ) )
-    self.ActivityTranslate[ ACT_MP_RELOAD_STAND ]				= owner:GetSequenceActivity( owner:LookupSequence( "flightdeploy" ) )
-    self.ActivityTranslate[ ACT_MP_RELOAD_CROUCH ]				= owner:GetSequenceActivity( owner:LookupSequence( "flightdeploy" ) )    
-	self.ActivityTranslate[ ACT_MP_JUMP ]						= index + 7
-	self.ActivityTranslate[ ACT_RANGE_ATTACK1 ]					= owner:GetSequenceActivity( owner:LookupSequence( "flightdeploy" ) )    
-	self.ActivityTranslate[ ACT_MP_SWIM ]						= index + 9
-    if ( t == "omniman" ) then
-        self.ActivityTranslate[ ACT_MP_ATTACK_STAND_PRIMARYFIRE ]	= owner:GetSequenceActivity( owner:LookupSequence( "flightdeploy" ) )
-        self.ActivityTranslate[ ACT_MP_ATTACK_CROUCH_PRIMARYFIRE ]	= owner:GetSequenceActivity( owner:LookupSequence( "flightdeploy" ) )
-        self.ActivityTranslate[ ACT_MP_ATTACK_STAND_SECONDARYFIRE ]	= owner:GetSequenceActivity( owner:LookupSequence( "flightdeploy" ) )
-        self.ActivityTranslate[ ACT_MP_ATTACK_CROUCH_SECONDARYFIRE ]	= owner:GetSequenceActivity( owner:LookupSequence( "flightdeploy" ) )
-        self.ActivityTranslate[ ACT_MP_RELOAD_STAND ]				= owner:GetSequenceActivity( owner:LookupSequence( "flightdeploy" ) )
-        self.ActivityTranslate[ ACT_MP_RELOAD_CROUCH ]				= owner:GetSequenceActivity( owner:LookupSequence( "flightdeploy" ) )    
-    end
-
-	-- "normal" jump animation doesn't exist
-	if ( t == "normal" ) then
-		self.ActivityTranslate[ ACT_MP_JUMP ] = ACT_HL2MP_JUMP_SLAM
-	end
 end
 
 --
